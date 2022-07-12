@@ -2,13 +2,13 @@
 
 Today we will learn about turning a mobile-only page into a *mobile-first* page:
 
-![](docs/final.gif)
+![](docs/final_opt.gif)
 
 ## But first: what does mobile-first mean? 📝
 
 Traditionally, websites were designed and styled to be seen on desktop computers (because that's all there was). When people started having PDAs, iPads and such, *responsive* design appeared. Responsive design meant that once you had your page styled, you had to add styles for smaller screens.
 
-![](https://braunmarketingandconsulting.es/wp-content/uploads/mobile-first.jpg)
+![](docs/responsivedesign.jpeg)
 
 A *mobile-first* approach to design means that the **first CSS code writen** is the one seen on a smartphone screen. Why? Because:
 
@@ -37,7 +37,7 @@ However, this is just a standard; then creating your projects, feel free to choo
 
 You already have all the styles for the mobile design. Open the project, inspect it with any mobile size and it should be fine.
 
-You are also given some variables. Remember that you can use it with the word <code>var</code>:
+You are also given some variables. Remember that you can use them with the word <code>var</code>:
 
 ```css
 color: var(--primary-blue);
@@ -55,12 +55,14 @@ color: var(--primary-blue);
 
 The first breakpoint we will take into account for our project is the tablet screen (from 568px and up). Think about what we want:
 
-- The cards, instead of occupying the 100% of their container, they should occupy the 50% (about half the parent).
+- Each column of cards, instead of occupying the 100% of their container, they should occupy the 50% (about half the parent).
 - All the elements are centered in the screen:
 
 ![](docs/2columns.png)
 
-Media queries work this way, and we ONLY include the elements that change from the other CSS code (for instance, the navbar will stay the same throughout all the different screens, so we don't need to change anything):
+### How does a media query work?
+
+Media queries work with the following syntax, and we ONLY include the elements that change from the other CSS code (for instance, the navbar will stay the same throughout all the different screens, so we don't need to change anything):
 
 ```css
 @media (min-width: 568px){
@@ -73,7 +75,35 @@ Media queries work this way, and we ONLY include the elements that change from t
 }
 ```
 
-Your instructions are, when the user is browsing in a screen from 568px and upwards:
+We can also combine different media queries. For instance, if we wanted some styles only in a certain range of pixels:
+
+```css
+@media (min-width: 568px) and (max-width: 798px){
+  .selector {
+    property: value;
+  }
+}
+```
+
+
+We could also write different styles for a screen when the user is using the device vertically (*orientation: portratit*) or horizontally (*orientation landscape*):
+
+```css
+@media (min-width: 768px) and (orientation: portrait){
+  .selector {
+    property: value;
+  }
+}
+```
+
+But, for now, our media queries are going to be very simple and we are not going to combine them.
+
+---
+### Time to code 🎬
+
+Try to write your own CSS and check the solution before moving on to the next iteration.
+
+When the user is browsing in a screen **from 568px and upwards**:
 
 - The header h1 will be aligned to the center
 - The card itself, instead of occupying the 100% of its parent, should occupy the 50%, but, for now, let's say it occupies the 47% to take into account the separation between cards (we will fix that later)
@@ -110,11 +140,11 @@ Your instructions are, when the user is browsing in a screen from 568px and upwa
 </details>
 <br>
 
-So far so good, but if you inspect it closely, it doesn't look pixel-perfect (see all that purple space on the right that doesn't belong?):
+So far so good, but if you inspect it closely, it doesn't look pixel-perfect (see all that purple space on the right that doesn't belong?). We only want the separation between columns and rows and we want the rest to be perfectly centered:
 
 ![](docs/step1.png)
 
-That's because we told the cards to be 47% width, because if we set them to 50% + the 20px from the gap, it equals more than 100%, and the second column of cards wraps down because it doesn't fit (try it if you don't believe me!), but the right width is not 47%, it's somewhere between there and 50%. So let's improve this code.
+That's because we told the cards to be 47% width, because if we set them to 50% + the 20px from the gap, it equals more than 100%, and the second column of cards wraps down because it doesn't fit (try it if you don't believe me!). But the right width is not 47%, it's somewhere between there and 50%. So let's improve this code.
 
 ---
 
@@ -139,7 +169,6 @@ First of all, create a new variable for the gap, because we will be using it qui
 }
 ```
 </details>
-
 <br>
 
 ### Now: which width should the cards have?
@@ -156,15 +185,15 @@ If it is hard to understand, image the following scenario:
 
 ![](docs/scheme.png)
 
-This is the same, only we don't know that total width, because it changes as the screen increases. So, how can we make it dynamic? Calc to the rescue!
+This is the same, only we don't know that total width, because it changes as the screen increases. So, how can we make it dynamic? <code>Calc</code> to the rescue!
 
-CSS has a property **calc** that allows you to do simple mathematic operations. Here is an example:
+CSS has a [property **calc**](https://developer.mozilla.org/en-US/docs/Web/CSS/calc) that allows you to do simple mathematic operations. You can add, substract, multiply and divide, and use all kinds of measure units (even variables). It is pretty cool! Here is an example:
 
 ```css
 margin: calc(20px + 1rem);
 ```
 
-You can add, substract, multiply and divide, and use all kinds of measure units (even variables). It is pretty cool! So, in this case, let's change that 47% for:
+ So, in our code, let's change that 47% for:
 
 ```css
   section.card {
@@ -182,7 +211,7 @@ NOW it looks pixel-perfectly centered, even as you make the screen bigger and sm
 
 For screens of 1024px and bigger, user should see three columns. 
 This means, that there will be two gaps (two empty spaces between the three columns). So:
-- The card should be 33.33% minus the gap * 2 spaces, to distribute between 3 columns
+- The card should be 33.33% minus the gap * 2 spaces, to distribute among 3 columns
 
 <details>
 <summary>Check for the solution</summary>
@@ -204,7 +233,7 @@ This means, that there will be two gaps (two empty spaces between the three colu
 
 For screens of 1300px and bigger, user should see four columns. 
 This means, that there will be three gaps (three empty spaces between the four columns). So:
-- The card should be 25% of the space minus the gap * 3 spaces, to distribute between 4 columns
+- The card should be 25% of the space minus the gap * 3 spaces, to distribute among 4 columns
 
 <details>
 <summary>Check for the solution</summary>
@@ -219,4 +248,7 @@ This means, that there will be three gaps (three empty spaces between the four c
 }
 ```
 </details>
+
+
+All done! ✅
 
